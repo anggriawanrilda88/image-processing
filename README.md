@@ -42,7 +42,6 @@ curl --location '192.168.190.3:8011/api/v1/images/download/65302fb4-59bf-4762-8e
 
 ## Quick Setup
 To run this Golang application, follow these steps:
-
 <br>Prepare the .env file according to the example in the .env.example file and adjust the variables according to the condition of your local computer.
 <br>Run the command `go mod tidy` to download the required external modules.
 <br>Run the command `make setup-tools` to download the necessary files needed for development auto run such as the 'air' binary.
