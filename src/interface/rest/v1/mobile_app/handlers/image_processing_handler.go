@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ubersnap-test/src/app/usecases"
-	"github.com/ubersnap-test/src/interface/rest/response"
-	"github.com/ubersnap-test/src/interface/rest/v1/mobile_app/requests"
-	"github.com/ubersnap-test/src/interface/rest/v1/mobile_app/transformers"
+	"github.com/image-processing/src/app/usecases"
+	"github.com/image-processing/src/interface/rest/response"
+	"github.com/image-processing/src/interface/rest/v1/mobile_app/requests"
+	"github.com/image-processing/src/interface/rest/v1/mobile_app/transformers"
 )
 
 type ImageProcessingHandler interface {

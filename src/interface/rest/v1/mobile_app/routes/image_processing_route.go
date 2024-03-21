@@ -3,7 +3,7 @@ package mobileapp_route
 import (
 	"net/http"
 
-	"github.com/ubersnap-test/src/interface/rest/v1/mobile_app/handlers"
+	"github.com/image-processing/src/interface/rest/v1/mobile_app/handlers"
 
 	"github.com/gin-gonic/gin"
 )

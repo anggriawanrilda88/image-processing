@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"image"
 	"image/jpeg"
-	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
@@ -17,12 +16,12 @@ import (
 )
 
 type ImageProcessing struct {
-	BaseEntity
 	outputPath  string
 	fileContent []byte
 }
 
-const imagePathFolder = "./tmp"
+var imagePathFolder = "./tmp"
+
 const apiPathV1 = "/api/v1/images/download/"
 const imageQuality = 100
 
@@ -38,9 +37,7 @@ func CreateConverPNGtoJPEG(file multipart.File, header *multipart.FileHeader, ho
 
 	// create directory
 	tempDir := imagePathFolder
-	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
-		os.Mkdir(tempDir, os.ModePerm)
-	}
+	os.Mkdir(tempDir, os.ModePerm)
 
 	// create input output file
 	randomName := uuid.New().String()[:32]
@@ -49,25 +46,25 @@ func CreateConverPNGtoJPEG(file multipart.File, header *multipart.FileHeader, ho
 	outputPath := strings.TrimSuffix(inputPath, filepath.Ext(inputPath)) + ".jpg"
 
 	// save file to local disk
-	input, err := os.Create(inputPath)
+	input, err := osCreateInput(inputPath)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 	defer input.Close()
-	_, err = io.Copy(input, file)
+	_, err = ioCopy(input, file)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 
 	// read from png file
-	img := gocv.IMRead(outputPath, gocv.IMReadColor)
+	img := gocvIMRead(outputPath, gocv.IMReadColor)
 	if img.Empty() {
 		return nil, fmt.Errorf("failed to read image: %s", outputPath)
 	}
 	defer img.Close()
 
 	// save for change jpg file to local disk
-	output, err := os.Create(outputPath)
+	output, err := osCreateOutput(outputPath)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
@@ -76,7 +73,7 @@ func CreateConverPNGtoJPEG(file multipart.File, header *multipart.FileHeader, ho
 	// save as jpeg
 	jpegOptions := &jpeg.Options{Quality: imageQuality} // set image quality
 	image, _ := img.ToImage()
-	if err := jpeg.Encode(output, image, jpegOptions); err != nil {
+	if err := jpegEncode(output, image, jpegOptions); err != nil {
 		return nil, err
 	}
 
@@ -98,9 +95,6 @@ func ResizeSpecificImage(
 ) (*ImageProcessing, error) {
 	// read file extension
 	ext := filepath.Ext(header.Filename)
-	if ext != ".png" {
-		return nil, errors.New("invalid file format. only PNG files are supported")
-	}
 
 	width, err := strconv.Atoi(widthStr)
 	if err != nil {
@@ -113,9 +107,7 @@ func ResizeSpecificImage(
 
 	// create directory
 	tempDir := imagePathFolder
-	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
-		os.Mkdir(tempDir, os.ModePerm)
-	}
+	os.Mkdir(tempDir, os.ModePerm)
 
 	// create input output file
 	randomName := uuid.New().String()[:32]
@@ -124,18 +116,18 @@ func ResizeSpecificImage(
 	outputPath := strings.TrimSuffix(inputPath, filepath.Ext(inputPath)) + ext
 
 	// save file to local disk
-	out, err := os.Create(outputPath)
+	out, err := osCreateOutput(outputPath)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 	defer out.Close()
-	_, err = io.Copy(out, file)
+	_, err = ioCopy(out, file)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 
 	// read from png file
-	img := gocv.IMRead(outputPath, gocv.IMWritePxmBinary)
+	img := gocvIMRead(outputPath, gocv.IMWritePxmBinary)
 	if img.Empty() {
 		return nil, fmt.Errorf("failed to read image: %s", outputPath)
 	}
@@ -146,7 +138,7 @@ func ResizeSpecificImage(
 	gocv.Resize(img, &resized, image.Point{X: width, Y: height}, 0, 0, gocv.InterpolationArea)
 
 	// write image with new size
-	if !gocv.IMWrite(outputPath, resized) {
+	if !gocvIMWrite(outputPath, resized) {
 		return nil, fmt.Errorf("failed to write resized image: %s", outputPath)
 	}
 
@@ -176,9 +168,7 @@ func ImageCompress(file multipart.File, header *multipart.FileHeader, imageQuali
 
 	// create directory
 	tempDir := imagePathFolder
-	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
-		os.Mkdir(tempDir, os.ModePerm)
-	}
+	os.Mkdir(tempDir, os.ModePerm)
 
 	// create input output file
 	randomName := uuid.New().String()[:32]
@@ -187,25 +177,25 @@ func ImageCompress(file multipart.File, header *multipart.FileHeader, imageQuali
 	outputPath := strings.TrimSuffix(inputPath, filepath.Ext(inputPath)) + ext
 
 	// save file to local disk
-	input, err := os.Create(inputPath)
+	input, err := osCreateInput(inputPath)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 	defer input.Close()
-	_, err = io.Copy(input, file)
+	_, err = ioCopy(input, file)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
 
 	// read from png file
-	img := gocv.IMRead(outputPath, gocv.IMReadColor)
+	img := gocvIMRead(outputPath, gocv.IMReadColor)
 	if img.Empty() {
 		return nil, fmt.Errorf("failed to read image: %s", outputPath)
 	}
 	defer img.Close()
 
 	// save file to local disk
-	output, err := os.Create(outputPath)
+	output, err := osCreateOutput(outputPath)
 	if err != nil {
 		return nil, errors.New("failed to save uploaded file")
 	}
@@ -214,7 +204,7 @@ func ImageCompress(file multipart.File, header *multipart.FileHeader, imageQuali
 	// save as jpeg
 	jpegOptions := &jpeg.Options{Quality: quality} // set image quality
 	image, _ := img.ToImage()
-	if err := jpeg.Encode(output, image, jpegOptions); err != nil {
+	if err := jpegEncode(output, image, jpegOptions); err != nil {
 		return nil, err
 	}
 
@@ -232,14 +222,14 @@ func Download(image string) (*ImageProcessing, error) {
 	filePath := filepath.Join(tempDir, image)
 
 	// read file
-	file, err := os.Open(filePath)
+	file, err := osOpen(filePath)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
 	// read file content
-	fileContent, err := io.ReadAll(file)
+	fileContent, err := ioReadAll(file)
 	if err != nil {
 		return nil, err
 	}

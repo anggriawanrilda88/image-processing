@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	handler_mb_app_v1 "github.com/ubersnap-test/src/interface/rest/v1/mobile_app/handlers"
-	mobileapp_route "github.com/ubersnap-test/src/interface/rest/v1/mobile_app/routes"
+	handler_mb_app_v1 "github.com/image-processing/src/interface/rest/v1/mobile_app/handlers"
+	mobileapp_route "github.com/image-processing/src/interface/rest/v1/mobile_app/routes"
 )
 
-const apiName = "ubersnap-test"
+const apiName = "image-processing"
 
 func CheckHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{

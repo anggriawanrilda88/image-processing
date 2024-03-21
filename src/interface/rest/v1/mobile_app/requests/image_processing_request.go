@@ -5,7 +5,7 @@ import (
 	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ubersnap-test/src/app/dto"
+	"github.com/image-processing/src/app/dto"
 )
 
 // IOrderRequest ...

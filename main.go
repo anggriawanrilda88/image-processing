@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/image-processing/src/interface/rest"
 	"github.com/joho/godotenv"
-	"github.com/ubersnap-test/src/interface/rest"
 )
 
 func init() {

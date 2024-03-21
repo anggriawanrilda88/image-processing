@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ubersnap-test/src/infra/constants"
+	"github.com/image-processing/src/infra/constants"
 )
 
 // ResponseMessage consist of payload details

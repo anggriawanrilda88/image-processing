@@ -1,67 +1,51 @@
-# Dating App Documentation
-Welcome to the Dating App! This application is testing app that designed to connect individuals in a fun and interactive way, allowing users to discover potential matches based on shared interests, preferences, and geographical proximity. With a user-friendly interface and a range of features, the Dating App provides a platform for users to engage, build connections, and find meaningful relationships.
+# Ubernap Test Documentation
 
-# Domain-Driven Design (DDD) Structure
-This application is developed following the principles of Domain-Driven Design (DDD). DDD promotes a modular and structured approach to building software by organizing code around the business domain.
+This Image Processing application is created to complete the technical test at Ubersnap Company. The code architecture design in this repository follows the clean architecture using the principles of DDD (Domain Driven Design), which places the business logic in the domain layer. Therefore, all business logic related to image processing can be found in `/src/domain/entities/image_processing_entity.go`.
 
-# Show Of Structure
+## APIs
 
-dating-app <br />
-----postman_test <br />
-----migrations <br />
-----src <br />
---------app <br />
-------------dto <br />
-------------usecase <br />
---------domain <br />
-------------entities <br />
-------------repositories <br />
-------------value_object <br />
-----------------user <br />
---------infra <br />
-------------auth <br />
-----------------jwt <br />
-------------constants <br />
-------------helpers <br />
-------------models <br />
-------------persistence <br />
-----------------postgresql <br />
---------interface <br />
-------------rest <br />
-----------------middleware <br />
-----------------response <br />
-----------------v1 <br />
---------------------mobile_app <br />
-------------------------handlers <br />
-------------------------requests <br />
-------------------------routes <br />
-------------------------transformers <br />
+This repository provides several APIs:
 
-# Makefile For Development and Deployment
-Here include Makefile to run some command for development and deployment you can see the command bellow:<br /><br />
-`make bin` ==> this command to create folder bin <br />
-`make setup-tools` ==> this command to install hot reload bin and migrate bin <br />
-`make migration-create` ==> this command to create folder migrations and create file migration with name <br />
-`make migration-up` ==> this command to execute all sql query from migration file <br />
-`make migration-down` ==> this command to remove all sql query from migration file <br />
-`make run-dev` ==> this command to run hot reload for development <br />
-`make run` ==>  this command to run go file<br />
-`make build` ==>  this command to build golang become binary file or executable file<br />
+Converts an image from PNG format to JPG format.
 
+**Example Request:**
+```bash
+curl --location 'http://192.168.190.3:8011/api/v1/images/convert-png-to-jpg' \
+--form 'image=@"/C:/Users/anggr/Desktop/git.png"'
+```
 
-# Quick Setup
-Clone the repository: `git clone git@github.com:anggriawanrilda88/ubersnap-test.git` <br /><br />
-Setup Tools use Makefile: `make setup-tools` this will help to install hot reload, and migrate tools for golang<br /><br />
-Create file .env: `all variable needed can see on file .env.example`<br /><br />
-Migrate database: `make migration-up` this command will migrate all table used, ensure the connection database on .env file correct<br /><br />
-Run development with hot reload: `make run-dev` this command will run hot reload golang api<br /><br />
+Resizes an image to the specified dimensions.
 
+**Example Request:**
+```bash
+curl --location 'http://192.168.190.3:8011/api/v1/images/resize-image' \
+--form 'image=@"/C:/Users/anggr/Desktop/git.png"' \
+--form 'width="100"' \
+--form 'height="100"'
+```
 
-# API Example
-There are three api example in this app for testing reasong:<br />
-`POST   /ubersnap-test/api/v1/users`          ==> api for registration new user dating app.<br />
-`POST   /ubersnap-test/api/v1/users/login`    ==> api for login user and get token access.<br />
-`GET    /ubersnap-test/api/v1/users/:id`      ==> api to get detail user by id, validate with middleware authentication with jwt token access needed.<br />
+Compresses an image while maintaining reasonable quality.
 
-# POSTMAN TEST
-Folder postman_test contains test case files that can run on postman test.
+**Example Request:**
+```bash
+curl --location 'http://192.168.190.3:8011/api/v1/images/compress-image' \
+--form 'image=@"/C:/Users/anggr/Desktop/linkedin.png"' \
+--form 'imageQuality="high"'
+```
+
+Downloads the converted image using the provided link.
+
+**Example Request:**
+```bash
+curl --location '192.168.190.3:8011/api/v1/images/download/65302fb4-59bf-4762-8e41-5cb6116a.jpg'
+```
+
+## Quick Setup
+To run this Golang application, follow these steps:<br><br>
+
+<br>Prepare the .env file according to the example in the .env.example file and adjust the variables according to the condition of your local computer.
+<br>Run the command go mod tidy to download the required external modules.
+<br>Run the command make setup-tools to download the necessary files needed for development auto run such as the 'air' binary.
+<br>Install the OpenCV library on your local machine. To install it, follow the steps on the following link: OpenCV Installation Guide.
+<br>To start the application, run the command make run-dev and the application will run with auto reload when there are file changes.
+<br>To run unit testing, use the command go test -cover github.com/image-processing/src/domain/entities. Unit testing is specifically focused only on the entities package because the business logic functions are placed in this file.

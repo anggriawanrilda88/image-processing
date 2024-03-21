@@ -1,7 +1,7 @@
 package transformers
 
 import (
-	"github.com/ubersnap-test/src/domain/entities"
+	"github.com/image-processing/src/domain/entities"
 )
 
 type imageProcessingDownload struct {
