@@ -46,7 +46,7 @@ To run this Golang application, follow these steps:<br>
 <li>Prepare the .env file according to the example in the .env.example file and adjust the variables according to the condition of your local computer.</li>
 <li>Run the command `go mod tidy` to download the required external modules.</li>
 <li>Run the command `make setup-tools` to download the necessary files needed for development auto run such as the 'air' binary.</li>
-<li>Install the OpenCV library on your local machine. To install it, follow the steps on the following link: [OpenCV Installation Guide](https://gocv.io/).</li>
+<li>Install the OpenCV library on your local machine. To install it, follow the steps on the following link: https://gocv.io.</li>
 <li>To start the application, run the command `make run-dev` and the application will run with auto reload when there are file changes.</li>
 <li>To run unit testing, use the command `go test -cover github.com/image-processing/src/domain/entities`. Unit testing is specifically focused only on the entities package because the business logic functions are placed in this file.</li>
 </ul>
